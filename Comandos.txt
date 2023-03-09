@@ -1,0 +1,13 @@
+C:\Users\Caio H\AppData\Local\Programs\Python\Python39
+C:\Users\Caio H\AppData\Local\Programs\Python\Python39\Scripts
+
+
+pip install numpy
+pip list
+
+python .\1-Preprocessing\DataCleaning.py
+
+pip install scikit-learn
+
+python .\1-Preprocessing\DataNormalization.py
+
