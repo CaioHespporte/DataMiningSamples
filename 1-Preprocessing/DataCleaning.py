@@ -3,10 +3,10 @@ import numpy as np
 
 def main():
     # Faz a leitura do arquivo
-    names = ['S1','C1','S2','C2','S3','C3', 'S4', 'C4', 'S5', 'C5', 'CLASS'] 
-    features = ['S1','C1','S2','C2','S3','C3', 'S4', 'C4', 'S5', 'C5', 'CLASS']
-    output_file = '0-Datasets/poker-hand-testing-Clear.data'
-    input_file = '0-Datasets/poker-hand-testing.data'
+    names = ['R','F','M','T','D'] 
+    features = ['R','F','M','T','D']
+    output_file = '0-Datasets/transfusion-Clear.data'
+    input_file = '0-Datasets/transfusion.data'
     df = pd.read_csv(input_file,         # Nome do arquivo com dados
                      names = names,      # Nome das colunas 
                      usecols = features, # Define as colunas que serão  utilizadas
