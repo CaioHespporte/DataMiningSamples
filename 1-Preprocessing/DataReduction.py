@@ -6,10 +6,10 @@ import matplotlib.pyplot as plt
 
 def main():
     # Faz a leitura do arquivo
-    input_file = '0-Datasets/MamoClear.data'
-    names = ['Age','Shape','Margin','Density','Severity']
-    features = ['Age','Shape','Margin','Density']
-    target = 'Severity'
+    input_file = '0-Datasets/transfusion-Clear.data'
+    names = ['R','F','M','T','C']
+    features = ['R','F','M','T']
+    target = 'C'
     df = pd.read_csv(input_file,    # Nome do arquivo com dados
                      names = names) # Nome das colunas                      
     ShowInformationDataFrame(df,"Dataframe original")
