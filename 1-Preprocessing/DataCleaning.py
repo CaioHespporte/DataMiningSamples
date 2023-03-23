@@ -3,8 +3,8 @@ import numpy as np
 
 def main():
     # Faz a leitura do arquivo
-    names = ['R','F','M','T','D'] 
-    features = ['R','F','M','T','D']
+    names = ['R','F','M','T','C'] 
+    features = ['R','F','M','T','C']
     output_file = '0-Datasets/transfusion-Clear.data'
     input_file = '0-Datasets/transfusion.data'
     df = pd.read_csv(input_file,         # Nome do arquivo com dados

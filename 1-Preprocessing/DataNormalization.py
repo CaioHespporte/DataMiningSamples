@@ -6,10 +6,10 @@ from sklearn.preprocessing import MinMaxScaler
 
 def main():
     # Faz a leitura do arquivo
-    input_file = '0-Datasets/poker-hand-testing-Clear.data'
-    names = ['S1','C1','S2','C2','S3','C3', 'S4', 'C4', 'S5', 'C5', 'CLASS']
-    features = ['S1','C1','S2','C2','S3','C3', 'S4', 'C4', 'S5', 'C5']
-    target = 'CLASS'
+    input_file = '0-Datasets/transfusion-Clear.data'
+    names = ['R','F','M','T','C']
+    features = ['R','F','M','T']
+    target = 'C'
     df = pd.read_csv(input_file,    # Nome do arquivo com dados
                      names = names) # Nome das colunas                      
     ShowInformationDataFrame(df,"Dataframe original")
