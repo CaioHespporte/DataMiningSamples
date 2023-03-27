@@ -6,10 +6,10 @@ import matplotlib.pyplot as plt
 
 def main():
     # Faz a leitura do arquivo
-    input_file = '0-Datasets/poker-hand-testing-Clear.data'
-    names = ['S1','C1','S2','C2','S3','C3', 'S4', 'C4', 'S5', 'C5', 'CLASS']
-    features = ['S1','C1','S2','C2','S3','C3', 'S4', 'C4', 'S5', 'C5']
-    target = 'CLASS'
+    input_file = '0-Datasets/iris.csv'
+    names = ['x1','x2','x3','x4','Target']
+    features = ['x1','x2','x3','x4']
+    target = 'Target'
     df = pd.read_csv(input_file,    # Nome do arquivo com dados
                      names = names) # Nome das colunas                      
     ShowInformationDataFrame(df,"Dataframe original")
@@ -56,8 +56,8 @@ def VisualizePcaProjection(finalDf, targetColumn):
     ax.set_xlabel('Principal Component 1', fontsize = 15)
     ax.set_ylabel('Principal Component 2', fontsize = 15)
     ax.set_title('2 component PCA', fontsize = 20)
-    targets = ["0", "1" ,"2", "3" ,"4", "5" ,"6", "7" ,"8", "9" ]
-    colors = ['r', 'g', 'b', 'c', 'm', 'y', 'k', 'w', 'orange', 'silver']
+    targets = ["Setosa", 'Versicolor',"Virginica" ]
+    colors = ['r', 'g', 'b']
     for target, color in zip(targets,colors):
         indicesToKeep = finalDf[targetColumn] == target
         ax.scatter(finalDf.loc[indicesToKeep, 'principal component 1'],
