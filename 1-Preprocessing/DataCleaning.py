@@ -3,6 +3,11 @@ import numpy as np
 
 def main():
     names = ['R','F','M','T','C']
+    # = R (Recency - months since last donation)
+    # = F (Frequency - total number of donation)
+    # = M (Monetary - total blood donated in c.c.)
+    # = T (Time - months since first donation)
+    # = C (A binary variable representing whether he/she donated blood in March 2007 - 1 stand for donating blood; 0 stands for not donating blood).
     features = ['R','F','M','T','C']
     output_file = '0-Datasets/transfusion-Clear.data'
     input_file = '0-Datasets/transfusion.data'
