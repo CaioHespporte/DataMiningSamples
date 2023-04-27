@@ -94,7 +94,7 @@ def plot_confusion_matrix(cm, classes,
 
 
 def main():
-    # Load iris data and store in dataframe
+    # Load transfusion-Clear data and store in dataframe
     iris = datasets.load_iris()
     df = pd.DataFrame(data=iris.data, columns=iris.feature_names)
     df['target'] = iris.target
