@@ -94,10 +94,15 @@ def plot_confusion_matrix(cm, classes,
 
 
 def main():
-    # Load transfusion-Clear data and store in dataframe
-    iris = datasets.load_iris()
-    df = pd.DataFrame(data=iris.data, columns=iris.feature_names)
-    df['target'] = iris.target
+    # Load iris data and store in dataframe
+    # iris = datasets.load_iris()
+    # df = pd.DataFrame(data=iris.data, columns=iris.feature_names)
+    input_file = '0-Datasets/transfusion-Clear.data'
+    names = ['R','F','M','T','C']
+    target = 'C'
+    df = pd.read_csv(input_file,    # Nome do arquivo com dados
+                     names = names) # Nome das colunas  
+    df['target'] = target
     df.head()
 
     # Separate X and y data
@@ -127,8 +132,8 @@ def main():
 
     # Get test confusion matrix
     cm = confusion_matrix(y_test, y_hat_test)        
-    plot_confusion_matrix(cm, iris.target_names, False, "Confusion Matrix - K-NN")      
-    plot_confusion_matrix(cm, iris.target_names, True, "Confusion Matrix - K-NN normalized")  
+    plot_confusion_matrix(cm, target, False, "Confusion Matrix - K-NN")      
+    plot_confusion_matrix(cm, target, True, "Confusion Matrix - K-NN normalized")  
 
     # STEP 2 - TESTS USING knn classifier from sk-learn
     knn = KNeighborsClassifier(n_neighbors=5)
@@ -143,8 +148,8 @@ def main():
 
     # Get test confusion matrix    
     cm = confusion_matrix(y_test, y_hat_test)        
-    plot_confusion_matrix(cm, iris.target_names, False, "Confusion Matrix - K-NN sklearn")      
-    plot_confusion_matrix(cm, iris.target_names, True, "Confusion Matrix - K-NN sklearn normalized" )  
+    plot_confusion_matrix(cm, target, False, "Confusion Matrix - K-NN sklearn")      
+    plot_confusion_matrix(cm, target, True, "Confusion Matrix - K-NN sklearn normalized" )  
     plt.show()
 
 
