@@ -3,6 +3,7 @@ import itertools
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import imblearn
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score
@@ -10,6 +11,7 @@ from sklearn.metrics import f1_score
 from sklearn.metrics import confusion_matrix
 from sklearn import datasets
 from sklearn.svm import SVC
+from imblearn.over_sampling import RandomOverSampler, SMOTE
 
 def plot_confusion_matrix(cm, classes,
                           normalize=False,
@@ -46,37 +48,33 @@ def plot_confusion_matrix(cm, classes,
     plt.ylabel('True label')
     plt.xlabel('Predicted label')    
 
-def load_dataset(dataset='cancer'):        
-    if dataset == 'iris':
-        # Load iris data and store in dataframe
-        iris = datasets.load_iris()
-        names = iris.target_names
-        df = pd.DataFrame(data=iris.data, columns=iris.feature_names)
-        df['target'] = iris.target
-    elif dataset == 'cancer':
-        # Load cancer data and store in dataframe
-        cancer = datasets.load_breast_cancer()
-        names = cancer.target_names
-        df = pd.DataFrame(data=cancer.data, columns=cancer.feature_names)
-        df['target'] = cancer.target
-    
-    print(df.head())
-    return names, df
-
 
 def main():
     #load dataset
-    target_names, df = load_dataset('iris')
+    #target_names, df = load_dataset('iris')
+    input_file = '0-Datasets/transfusion-Clear.data'
+    names = ['R','F','M','T','C']
+    target_names =['Não','Sim']
+    df = pd.read_csv(input_file,    # Nome do arquivo com dados
+                     names = names) # Nome das colunas                      
+    df = df.rename({'C': 'target'}, axis=1)
 
     # Separate X and y data
     X = df.drop('target', axis=1)
     y = df.target   
     print("Total samples: {}".format(X.shape[0]))
 
-    # Split the data - 75% train, 25% test
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=1)
+    # Split the data - 70% train, 30% test
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.30, random_state=1)
     print("Total train samples: {}".format(X_train.shape[0]))
     print("Total test  samples: {}".format(X_test.shape[0]))
+
+    #Balanceamento de Classe
+    oversample = SMOTE()
+    X_train, y_train = oversample.fit_resample(X_train, y_train)
+    #ros = RandomOverSampler(random_state = 32)
+    #X_train, y_train = ros.fit_resample(X, y)
+    # ******Lembrar de modificar o Kernel******
 
     # Scale the X data using Z-score
     scaler = StandardScaler()

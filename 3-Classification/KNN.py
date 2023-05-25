@@ -2,6 +2,7 @@
 import itertools
 import pandas as pd
 import numpy as np
+import imblearn
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -11,6 +12,8 @@ from sklearn.metrics import confusion_matrix
 from sklearn import datasets
 from sklearn.neighbors import KNeighborsClassifier
 from collections import Counter
+from imblearn.over_sampling import RandomOverSampler, SMOTE
+
 
 # Calculate distance between two points
 def minkowski_distance(a, b, p=1):    
@@ -112,10 +115,16 @@ def main():
     y = df.target    
     print("Total samples: {}".format(X.shape[0]))
 
-    # Split the data - 75% train, 25% test
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=1)
+    # Split the data - 70% train, 30% test
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1)
     print("Total train samples: {}".format(X_train.shape[0]))
     print("Total test  samples: {}".format(X_test.shape[0]))
+
+    #Balanceamento de Classe
+    # oversample = SMOTE()
+    # X_train, y_train = oversample.fit_resample(X_train, y_train)
+    ros = RandomOverSampler(random_state = 32)
+    X_train, y_train = ros.fit_resample(X, y)
 
     # Scale the X data using Z-score
     scaler = StandardScaler()
@@ -124,7 +133,7 @@ def main():
         
     # STEP 1 - TESTS USING knn classifier write from scratch    
     # Make predictions on test dataset using knn classifier
-    y_hat_test = knn_predict(X_train, X_test, y_train, y_test, k=5, p=2)
+    y_hat_test = knn_predict(X_train, X_test, y_train, y_test, k=10, p=2)
 
     # Get test accuracy score
     accuracy = accuracy_score(y_test, y_hat_test)*100
