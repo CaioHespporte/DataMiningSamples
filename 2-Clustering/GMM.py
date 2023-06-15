@@ -1,12 +1,10 @@
 #Implementation of Kmeans from scratch and using sklearn
 #Loading the required modules 
 import numpy as np
+import pandas as pd
 from scipy.spatial.distance import cdist 
-from sklearn.datasets import load_digits
 from sklearn.decomposition import PCA
 from sklearn.mixture import GaussianMixture
-from sklearn.metrics import silhouette_score
-from sklearn.metrics import silhouette_samples
 import matplotlib.pyplot as plt
 
 def show_digitsdataset(digits):
@@ -19,7 +17,7 @@ def show_digitsdataset(digits):
         # label the image with the target value
         ax.text(0, 7, str(digits.target[i]))
 
-    #fig.show()
+#     #fig.show()
 
 def plot_samples(projected, labels, title):    
     fig = plt.figure()
@@ -34,19 +32,28 @@ def plot_samples(projected, labels, title):
 
 def main():
     #Load dataset Digits
-    digits = load_digits()
-    show_digitsdataset(digits)
+    # digits = load_digits()
+    # show_digitsdataset(digits)
+    input_file = '0-Datasets/transfusion-Clear.data'
+    names = ['R','F','M','T','C']
+    features = ['R','F','M','T']
+    target = 'C'
+    df = pd.read_csv(input_file,    # Nome do arquivo com dados
+                     names = names) # Nome das colunas  
+    
+    x = df.loc[:, features].values
+    y = df.loc[:, target].values
     
     #Transform the data using PCA
     pca = PCA(2)
-    projected = pca.fit_transform(digits.data)
+    projected = pca.fit_transform(x)
     print(pca.explained_variance_ratio_)
-    print(digits.data.shape)
+    #print(df.data.shape)
     print(projected.shape)    
-    plot_samples(projected, digits.target, 'Original Labels') 
+    plot_samples(projected, y, 'Original Labels') 
     
     #Applying sklearn GMM function
-    gm  = GaussianMixture(n_components=10).fit(projected)
+    gm  = GaussianMixture(n_components=2).fit(projected)
     print(gm.weights_)
     print(gm.means_)
     x = gm.predict(projected)
