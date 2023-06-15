@@ -82,7 +82,7 @@ def main():
     X_test = scaler.transform(X_test)
 
     # TESTS USING SVM classifier from sk-learn    
-    svm = SVC(kernel='poly') # poly, rbf, linear
+    svm = SVC(kernel='rbf') # poly, rbf, linear
     # training using train dataset
     svm.fit(X_train, y_train)
     # get support vectors
