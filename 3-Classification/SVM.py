@@ -1,17 +1,12 @@
-# Initial imports
 import itertools
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import imblearn
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_validate
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import accuracy_score
-from sklearn.metrics import f1_score
-from sklearn.metrics import confusion_matrix
-from sklearn import datasets
+from sklearn.metrics import accuracy_score, f1_score, confusion_matrix
 from sklearn.svm import SVC
-from imblearn.over_sampling import RandomOverSampler, SMOTE
+from imblearn.over_sampling import SMOTE
 
 def plot_confusion_matrix(cm, classes,
                           normalize=False,
@@ -46,22 +41,20 @@ def plot_confusion_matrix(cm, classes,
 
     plt.tight_layout()
     plt.ylabel('True label')
-    plt.xlabel('Predicted label')    
+    plt.xlabel('Predicted label')
 
 
 def main():
-    #load dataset
-    #target_names, df = load_dataset('iris')
+    # Load dataset
     input_file = '0-Datasets/transfusion-Clear.data'
-    names = ['R','F','M','T','C']
-    target_names =['Não','Sim']
-    df = pd.read_csv(input_file,    # Nome do arquivo com dados
-                     names = names) # Nome das colunas                      
+    names = ['R', 'F', 'M', 'T', 'C']
+    target_names = ['Não', 'Sim']
+    df = pd.read_csv(input_file, names=names)
     df = df.rename({'C': 'target'}, axis=1)
 
     # Separate X and y data
     X = df.drop('target', axis=1)
-    y = df.target   
+    y = df.target
     print("Total samples: {}".format(X.shape[0]))
 
     # Split the data - 70% train, 30% test
@@ -69,42 +62,38 @@ def main():
     print("Total train samples: {}".format(X_train.shape[0]))
     print("Total test  samples: {}".format(X_test.shape[0]))
 
-    #Balanceamento de Classe
+    # Balanceamento de Classe
     oversample = SMOTE()
     X_train, y_train = oversample.fit_resample(X_train, y_train)
-    #ros = RandomOverSampler(random_state = 32)
-    #X_train, y_train = ros.fit_resample(X, y)
-    # ******Lembrar de modificar o Kernel******
 
     # Scale the X data using Z-score
     scaler = StandardScaler()
     X_train = scaler.fit_transform(X_train)
     X_test = scaler.transform(X_test)
 
-    # TESTS USING SVM classifier from sk-learn    
-    svm = SVC(kernel='poly') # poly, rbf, linear
-    # training using train dataset
+    # SVM classifier using polynomial kernel
+    svm = SVC(kernel='rbf') # poly, rbf, linear
+
+    # Perform cross-validation
+    cv_results = cross_validate(svm, X_train, y_train, cv=10)
+    print("Cross Validation SVM: {:.2f}%".format(np.mean(cv_results['test_score']) * 100))
+
+    # Fit the model on the whole training data
     svm.fit(X_train, y_train)
-    # get support vectors
-    print(svm.support_vectors_)
-    # get indices of support vectors
-    print(svm.support_)
-    # get number of support vectors for each class
-    print("Qtd Support vectors: ")
-    print(svm.n_support_)
-    # predict using test dataset
+
+    # Predict using test dataset
     y_hat_test = svm.predict(X_test)
 
-     # Get test accuracy score
-    accuracy = accuracy_score(y_test, y_hat_test)*100
-    f1 = f1_score(y_test, y_hat_test,average='macro')
-    print("Acurracy SVM from sk-learn: {:.2f}%".format(accuracy))
-    print("F1 Score SVM from sk-learn: {:.2f}%".format(f1))
+    # Get test accuracy score
+    accuracy = accuracy_score(y_test, y_hat_test) * 100
+    f1 = f1_score(y_test, y_hat_test, average='macro')
+    print("Accuracy SVM from scikit-learn: {:.2f}%".format(accuracy))
+    print("F1 Score SVM from scikit-learn: {:.2f}%".format(f1))
 
-    # Get test confusion matrix    
-    cm = confusion_matrix(y_test, y_hat_test)        
-    plot_confusion_matrix(cm, target_names, False, "Confusion Matrix - SVM sklearn")      
-    plot_confusion_matrix(cm, target_names, True, "Confusion Matrix - SVM sklearn normalized" )  
+    # Get test confusion matrix
+    cm = confusion_matrix(y_test, y_hat_test)
+    plot_confusion_matrix(cm, target_names, False, "Confusion Matrix - SVM scikit-learn")
+    plot_confusion_matrix(cm, target_names, True, "Confusion Matrix - SVM scikit-learn normalized")
     plt.show()
 
 

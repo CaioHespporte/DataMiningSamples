@@ -6,13 +6,15 @@ import imblearn
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, recall_score
 from sklearn.metrics import f1_score
 from sklearn.metrics import confusion_matrix
 from sklearn import datasets
 from sklearn.neighbors import KNeighborsClassifier
 from collections import Counter
 from imblearn.over_sampling import RandomOverSampler, SMOTE
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import cross_validate
 
 
 # Calculate distance between two points
@@ -62,7 +64,7 @@ def knn_predict(X_train, X_test, y_train, y_test, k, p):
 
 
 def plot_confusion_matrix(cm, classes,
-                          normalize=False,
+                          normalize=True,
                           title='Confusion matrix',
                           cmap=plt.cm.Blues):
     """
@@ -116,7 +118,7 @@ def main():
     print("Total samples: {}".format(X.shape[0]))
 
     # Split the data - 70% train, 30% test
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.30, random_state=1)
     print("Total train samples: {}".format(X_train.shape[0]))
     print("Total test  samples: {}".format(X_test.shape[0]))
 
@@ -130,7 +132,15 @@ def main():
     scaler = StandardScaler()
     X_train = scaler.fit_transform(X_train)
     X_test = scaler.transform(X_test)
-        
+    
+    # Realizar validação cruzada -> CHAT GPT
+    #knn = KNeighborsClassifier(n_neighbors=10, p=2)
+    #cv_scores = cross_val_score(knn, X_train, y_train, cv=10)  # Utilizando 10 folds na validação cruzada
+
+    #print("Cross-Validation Scores: ", cv_scores)
+    #print("Mean Accuracy: {:.2f}%".format(np.mean(cv_scores) * 100))
+    #print("Standard Deviation: {:.2f}%".format(np.std(cv_scores) * 100))
+
     # STEP 1 - TESTS USING knn classifier write from scratch    
     # Make predictions on test dataset using knn classifier
     y_hat_test = knn_predict(X_train, X_test, y_train, y_test, k=10, p=2)
@@ -147,9 +157,15 @@ def main():
     plot_confusion_matrix(cm, target_names, True, "Confusion Matrix - K-NN normalized")  
 
     # STEP 2 - TESTS USING knn classifier from sk-learn
-    knn = KNeighborsClassifier(n_neighbors=5)
+    knn = KNeighborsClassifier(n_neighbors=10)
     knn.fit(X_train, y_train)
     y_hat_test = knn.predict(X_test)
+
+  # Validação Cruzada -> GIT
+    cv_results = cross_validate(knn, X, y, cv=10)
+    sorted(cv_results.keys())
+    sorted(cv_results['test_score'])
+    print("Cross Validation K-NN: {:.2f}%".format(np.mean(cv_results['test_score'])*100))
 
      # Get test accuracy score
     accuracy = accuracy_score(y_test, y_hat_test)*100

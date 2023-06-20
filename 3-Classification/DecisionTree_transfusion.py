@@ -7,6 +7,8 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn import tree
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
+import imblearn
+from imblearn.over_sampling import RandomOverSampler, SMOTE
 
 def main():
     input_file = '0-Datasets/transfusion-Clear.data'
@@ -28,9 +30,17 @@ def main():
     normalizedDf = pd.DataFrame(data = X, columns = features)
     normalizedDf = pd.concat([normalizedDf, df[[target]]], axis = 1)
     
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.42, random_state=0)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.30, random_state=0)
     print(X_train.shape)
     print(X_test.shape)
+
+
+
+    #Balanceamento de Classe
+    #oversample = SMOTE()
+    #X_train, y_train = oversample.fit_resample(X_train, y_train)
+    ros = RandomOverSampler(random_state = 32)
+    X_train, y_train = ros.fit_resample(X, y)
 
     clf = DecisionTreeClassifier(max_leaf_nodes=5)
     clf.fit(X_train, y_train)
